@@ -1,0 +1,4 @@
+Flask==3.0.0
+flask-sock==0.7.0
+numpy==1.26.4
+pyrtlsdr==0.3.0

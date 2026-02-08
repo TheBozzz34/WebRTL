@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RTL-SDR Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar">
+        <div>
+          <p class="eyebrow">RTL-SDR Studio</p>
+          <h1>RTL-SDR Control Center</h1>
+          <p class="subtitle">
+            Monitor, tune, and explore live radio spectrum with real RTL-SDR telemetry.
+          </p>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <div>
+            <p class="status-label">Device Status</p>
+            <p class="status-value" id="deviceStatus">Disconnected</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="card controls">
+          <div class="card-header">
+            <h2>Receiver Controls</h2>
+            <p>Dial in the perfect frequency and gain profile.</p>
+          </div>
+          <div class="control-list">
+            <label class="control">
+              <span>Center Frequency</span>
+              <div class="control-input">
+                <input id="frequency" type="number" value="101.9" step="0.1" />
+                <span class="unit">MHz</span>
+              </div>
+            </label>
+            <label class="control">
+              <span>Sample Rate</span>
+              <div class="control-input">
+                <select id="sampleRate">
+                  <option value="0.24">240 kS/s</option>
+                  <option value="1.024">1.024 MS/s</option>
+                  <option value="1.8">1.8 MS/s</option>
+                  <option value="2.048">2.048 MS/s</option>
+                  <option value="2.4" selected>2.4 MS/s</option>
+                  <option value="2.56">2.56 MS/s</option>
+                </select>
+              </div>
+            </label>
+            <label class="control">
+              <span>Gain</span>
+              <div class="control-input">
+                <input id="gain" type="range" min="0" max="50" value="28" />
+                <span class="unit" id="gainValue">28 dB</span>
+              </div>
+            </label>
+            <label class="control">
+              <span>Gain Mode</span>
+              <select id="gainMode">
+                <option value="manual" selected>Manual</option>
+                <option value="auto">Auto</option>
+              </select>
+            </label>
+            <label class="control">
+              <span>Mode</span>
+              <select id="mode">
+                <option>FM</option>
+                <option>AM</option>
+                <option>NFM</option>
+                <option>USB</option>
+                <option>LSB</option>
+                <option>WFM</option>
+              </select>
+            </label>
+            <label class="control">
+              <span>Bandwidth</span>
+              <div class="control-input">
+                <select id="bandwidth"></select>
+              </div>
+            </label>
+          </div>
+          <div class="button-row">
+            <button class="primary" id="connectButton">Connect</button>
+            <button class="ghost" id="scanButton">Start Scan</button>
+          </div>
+        </section>
+
+        <section class="card spectrum">
+          <div class="card-header">
+            <h2>Spectrum Preview</h2>
+            <p>Real-time FFT waterfall from live IQ data.</p>
+          </div>
+          <canvas id="waterfall" width="720" height="240" class="spectrum-canvas"></canvas>
+          <div class="spectrum-details">
+            <div>
+              <p class="label">Noise Floor</p>
+              <p class="value" id="noiseFloor">-- dB</p>
+            </div>
+            <div>
+              <p class="label">Signal Peak</p>
+              <p class="value" id="signalPeak">-- dB</p>
+            </div>
+            <div>
+              <p class="label">Bandwidth</p>
+              <p class="value" id="bandwidthValue">-- Hz</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="card audio">
+          <div class="card-header">
+            <h2>Live Audio</h2>
+            <p>Stream demodulated audio from the connected RTL-SDR.</p>
+          </div>
+          <div class="audio-player">
+            <div class="audio-controls">
+              <label class="control">
+                <span>Volume</span>
+                <input id="volume" type="range" min="0" max="1" step="0.01" value="0.7" />
+              </label>
+              <button class="ghost" id="muteToggle">Mute</button>
+            </div>
+            <p class="helper-text" id="audioStatus">Connect to start streaming audio.</p>
+          </div>
+        </section>
+
+        <section class="card status">
+          <div class="card-header">
+            <h2>Live Status</h2>
+            <p>Real-time device feedback.</p>
+          </div>
+          <p class="status-line" id="lastScan">Awaiting scan results.</p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
