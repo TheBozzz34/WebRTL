@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RTL-SDR Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="top-bar">
+        <div>
+          <p class="eyebrow">RTL-SDR Studio</p>
+          <h1>Midnight Signal Control Center</h1>
+          <p class="subtitle">
+            Monitor, tune, and explore live radio spectrum with real RTL-SDR telemetry.
+          </p>
+        </div>
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <div>
+            <p class="status-label">Device Status</p>
+            <p class="status-value" id="deviceStatus">Disconnected</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="card controls">
+          <div class="card-header">
+            <h2>Receiver Controls</h2>
+            <p>Dial in the perfect frequency and gain profile.</p>
+          </div>
+          <div class="control-list">
+            <label class="control">
+              <span>Center Frequency</span>
+              <div class="control-input">
+                <input id="frequency" type="number" value="101.9" step="0.1" />
+                <span class="unit">MHz</span>
+              </div>
+            </label>
+            <label class="control">
+              <span>Sample Rate</span>
+              <div class="control-input">
+                <input id="sampleRate" type="number" value="2.4" step="0.1" />
+                <span class="unit">MS/s</span>
+              </div>
+            </label>
+            <label class="control">
+              <span>Gain</span>
+              <div class="control-input">
+                <input id="gain" type="range" min="0" max="49" value="28" />
+                <span class="unit" id="gainValue">28 dB</span>
+              </div>
+            </label>
+            <label class="control">
+              <span>Mode</span>
+              <select id="mode">
+                <option>FM</option>
+                <option>AM</option>
+                <option>USB</option>
+                <option>LSB</option>
+                <option>WFM</option>
+              </select>
+            </label>
+          </div>
+          <div class="button-row">
+            <button class="primary" id="connectButton">Connect</button>
+            <button class="ghost" id="scanButton">Scan Band</button>
+          </div>
+        </section>
+
+        <section class="card spectrum">
+          <div class="card-header">
+            <h2>Spectrum Preview</h2>
+            <p>Real-time visualization of the tuned band.</p>
+          </div>
+          <div class="spectrum-visual">
+            <div class="spectrum-grid">
+              <div class="spectrum-line"></div>
+              <div class="spectrum-line"></div>
+              <div class="spectrum-line"></div>
+            </div>
+            <div class="spectrum-wave" aria-hidden="true"></div>
+            <div class="spectrum-wave secondary" aria-hidden="true"></div>
+          </div>
+          <div class="spectrum-details">
+            <div>
+              <p class="label">Noise Floor</p>
+              <p class="value" id="noiseFloor">-- dB</p>
+            </div>
+            <div>
+              <p class="label">Signal Peak</p>
+              <p class="value" id="signalPeak">-- dB</p>
+            </div>
+            <div>
+              <p class="label">Bandwidth</p>
+              <p class="value" id="bandwidth">-- Hz</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="card recordings">
+          <div class="card-header">
+            <h2>Sessions</h2>
+            <p>Capture and bookmark your favorite signals.</p>
+          </div>
+          <div class="session-list">
+            <article class="session">
+              <div>
+                <h3>Morning Broadcast</h3>
+                <p>101.9 MHz · FM · 07:45 AM</p>
+              </div>
+              <button class="pill">Replay</button>
+            </article>
+            <article class="session">
+              <div>
+                <h3>Weather Alert</h3>
+                <p>162.55 MHz · NFM · 12:20 PM</p>
+              </div>
+              <button class="pill">Replay</button>
+            </article>
+            <article class="session">
+              <div>
+                <h3>Airband Watch</h3>
+                <p>118.40 MHz · AM · 03:10 PM</p>
+              </div>
+              <button class="pill">Replay</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="card insights">
+          <div class="card-header">
+            <h2>Live Insights</h2>
+            <p>Soft alerts to keep you in tune with the band.</p>
+          </div>
+          <ul class="insight-list">
+            <li>
+              <span class="badge">New</span>
+              Wideband FM carrier detected at 102.3 MHz.
+            </li>
+            <li>
+              <span class="badge">Tip</span>
+              Lower gain by 4 dB to reduce adjacent channel bleed.
+            </li>
+            <li>
+              <span class="badge">Saved</span>
+              Saved preset: “City Emergency Band”.
+            </li>
+            <li class="live">
+              <span class="badge">Live</span>
+              <span id="lastScan">Awaiting scan results.</span>
+            </li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
