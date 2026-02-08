@@ -1,17 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
-  color-scheme: dark;
-  --bg: #0f1020;
-  --card: #181a2b;
-  --accent: #8c9bff;
-  --accent-soft: rgba(140, 155, 255, 0.2);
-  --mint: #66e5d3;
-  --peach: #ff9f9f;
-  --lavender: #5c6cff;
-  --ink: #f7f6ff;
-  --muted: #b2b0c8;
-  --shadow: 0 22px 50px rgba(8, 10, 24, 0.65);
+  color-scheme: light;
+  --bg: #f5f4ff;
+  --card: #ffffff;
+  --accent: #7b87ff;
+  --accent-soft: #d6d9ff;
+  --mint: #b9f3e4;
+  --peach: #ffd9c7;
+  --lavender: #e4dcff;
+  --ink: #2b2b44;
+  --muted: #6d6a85;
+  --shadow: 0 18px 40px rgba(66, 72, 120, 0.12);
   --radius: 24px;
 }
 
@@ -22,7 +22,7 @@
 body {
   margin: 0;
   font-family: "Inter", system-ui, sans-serif;
-  background: radial-gradient(circle at top left, #22244a 0%, var(--bg) 45%, #0a0b14 100%);
+  background: radial-gradient(circle at top left, #ffffff 0%, var(--bg) 45%, #f3f0ff 100%);
   color: var(--ink);
 }
 
@@ -64,7 +64,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: rgba(24, 26, 43, 0.9);
+  background: var(--card);
   padding: 16px 20px;
   border-radius: 999px;
   box-shadow: var(--shadow);
@@ -76,7 +76,7 @@ h1 {
   height: 14px;
   border-radius: 50%;
   background: var(--peach);
-  box-shadow: 0 0 0 6px rgba(255, 159, 159, 0.25);
+  box-shadow: 0 0 0 6px rgba(255, 217, 199, 0.4);
 }
 
 .status-label {
@@ -104,7 +104,6 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  border: 1px solid rgba(140, 155, 255, 0.08);
 }
 
 .card-header h2 {
@@ -133,10 +132,10 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(20, 22, 40, 0.9);
+  background: #f8f7ff;
   border-radius: 16px;
   padding: 12px 16px;
-  border: 1px solid rgba(140, 155, 255, 0.15);
+  border: 1px solid #ecebff;
 }
 
 input,
@@ -177,17 +176,17 @@ button {
 
 .primary {
   background: var(--accent);
-  color: #05060f;
+  color: white;
   box-shadow: 0 10px 20px rgba(123, 135, 255, 0.35);
 }
 
 .ghost {
-  background: rgba(92, 108, 255, 0.2);
+  background: var(--lavender);
   color: var(--ink);
 }
 
 .spectrum-visual {
-  background: linear-gradient(135deg, #1b1e38 0%, #1a2533 50%, #122029 100%);
+  background: linear-gradient(135deg, #fdf7ff 0%, #f6fcff 50%, #f7fff9 100%);
   border-radius: 20px;
   padding: 28px;
   position: relative;
@@ -204,7 +203,7 @@ button {
 }
 
 .spectrum-line {
-  border-top: 1px dashed rgba(140, 155, 255, 0.35);
+  border-top: 1px dashed #cfc9ff;
 }
 
 .spectrum-wave {
@@ -256,7 +255,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: rgba(20, 22, 40, 0.75);
+  background: #f7f8ff;
   border-radius: 18px;
   padding: 16px 18px;
 }
@@ -273,8 +272,8 @@ button {
 }
 
 .pill {
-  background: rgba(102, 229, 211, 0.2);
-  color: var(--mint);
+  background: var(--mint);
+  color: #1f5143;
 }
 
 .insight-list {
@@ -288,7 +287,7 @@ button {
 .insight-list li {
   padding: 16px 18px;
   border-radius: 18px;
-  background: rgba(24, 26, 43, 0.8);
+  background: #f9f7ff;
   color: var(--ink);
   display: flex;
   align-items: center;
@@ -303,10 +302,6 @@ button {
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-}
-
-.insight-list .live {
-  border: 1px solid rgba(102, 229, 211, 0.35);
 }
 
 @media (max-width: 800px) {
