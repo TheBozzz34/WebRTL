@@ -59,6 +59,7 @@
               <select id="mode">
                 <option>FM</option>
                 <option>AM</option>
+                <option>NFM</option>
                 <option>USB</option>
                 <option>LSB</option>
                 <option>WFM</option>
@@ -98,6 +99,17 @@
               <p class="label">Bandwidth</p>
               <p class="value" id="bandwidth">-- Hz</p>
             </div>
+          </div>
+        </section>
+
+        <section class="card audio">
+          <div class="card-header">
+            <h2>Live Audio</h2>
+            <p>Stream demodulated audio from the connected RTL-SDR.</p>
+          </div>
+          <div class="audio-player">
+            <audio id="audioStream" controls></audio>
+            <p class="helper-text">Connect to start streaming audio.</p>
           </div>
         </section>
 

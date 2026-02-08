@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Iterable
 
 import numpy as np
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, Response, jsonify, request, send_from_directory
 from rtlsdr import RtlSdr
 
 
@@ -43,6 +44,74 @@ def compute_spectrum(samples: np.ndarray) -> tuple[float, float]:
     noise_floor = float(np.percentile(power, 10))
     peak = float(np.max(power))
     return noise_floor, peak
+
+
+def decimate(signal: np.ndarray, factor: int) -> np.ndarray:
+    if factor <= 1:
+        return signal
+    return signal[::factor]
+
+
+def fm_demod(samples: np.ndarray) -> np.ndarray:
+    angles = np.angle(samples)
+    return np.diff(np.unwrap(angles))
+
+
+def am_demod(samples: np.ndarray) -> np.ndarray:
+    return np.abs(samples) - np.mean(np.abs(samples))
+
+
+def to_pcm(samples: np.ndarray) -> bytes:
+    audio = np.clip(samples, -1.0, 1.0)
+    audio_int16 = (audio * 32767).astype(np.int16)
+    return audio_int16.tobytes()
+
+
+def wav_header(sample_rate: int) -> bytes:
+    byte_rate = sample_rate * 2
+    block_align = 2
+    data_size = 0xFFFFFFFF
+    riff_size = data_size + 36
+    return (
+        b"RIFF"
+        + riff_size.to_bytes(4, "little", signed=False)
+        + b"WAVEfmt "
+        + (16).to_bytes(4, "little", signed=False)
+        + (1).to_bytes(2, "little", signed=False)
+        + (1).to_bytes(2, "little", signed=False)
+        + sample_rate.to_bytes(4, "little", signed=False)
+        + byte_rate.to_bytes(4, "little", signed=False)
+        + block_align.to_bytes(2, "little", signed=False)
+        + (16).to_bytes(2, "little", signed=False)
+        + b"data"
+        + data_size.to_bytes(4, "little", signed=False)
+    )
+
+
+def iter_audio_chunks(mode: str) -> Iterable[bytes]:
+    if state.sdr is None:
+        return
+    sample_rate = int(state.settings.sample_rate * 1_000_000)
+    audio_rate = 48_000
+    decimation = max(1, sample_rate // audio_rate)
+    output_rate = sample_rate // decimation
+
+    while state.sdr is not None:
+        samples = state.sdr.read_samples(256 * 1024)
+        if mode in {"FM", "NFM", "WFM"}:
+            demodulated = fm_demod(samples)
+        else:
+            demodulated = am_demod(samples)
+        demodulated = decimate(demodulated, decimation)
+        max_val = np.max(np.abs(demodulated)) or 1.0
+        demodulated = demodulated / max_val
+        if output_rate != audio_rate:
+            ratio = output_rate / audio_rate
+            indices = (np.arange(0, len(demodulated) / ratio)).astype(int)
+            indices = indices[indices < len(demodulated)]
+            demodulated = demodulated[indices]
+            output_rate = audio_rate
+        yield to_pcm(demodulated.astype(np.float32))
 
 
 @app.get("/")
@@ -122,6 +191,19 @@ def scan():
     except RuntimeError as exc:
         state.last_error = str(exc)
         return jsonify({"error": state.last_error}), 500
+
+
+@app.get("/api/audio")
+def audio():
+    if state.sdr is None:
+        return jsonify({"error": "Device not connected."}), 400
+    mode = request.args.get("mode", state.settings.mode)
+    def generate():
+        yield wav_header(48_000)
+        for chunk in iter_audio_chunks(mode):
+            yield chunk
+
+    return Response(generate(), mimetype="audio/wav")
 
 
 @app.get("/<path:path>")

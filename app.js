@@ -11,6 +11,7 @@ const lastScan = document.querySelector("#lastScan");
 const noiseFloor = document.querySelector("#noiseFloor");
 const signalPeak = document.querySelector("#signalPeak");
 const bandwidth = document.querySelector("#bandwidth");
+const audioStream = document.querySelector("#audioStream");
 
 const setStatus = (state) => {
   if (state === "connected") {
@@ -43,6 +44,10 @@ const updateSettings = async () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+  if (audioStream.src) {
+    audioStream.src = `/api/audio?mode=${encodeURIComponent(modeSelect.value)}`;
+    audioStream.play().catch(() => {});
+  }
 };
 
 gainInput.addEventListener("input", (event) => {
@@ -60,6 +65,13 @@ connectButton.addEventListener("click", async () => {
   setStatus(data.status);
   if (data.error) {
     lastScan.textContent = data.error;
+  }
+  if (data.status === "connected") {
+    audioStream.src = `/api/audio?mode=${encodeURIComponent(modeSelect.value)}`;
+    audioStream.play().catch(() => {});
+  } else {
+    audioStream.removeAttribute("src");
+    audioStream.load();
   }
 });
 
